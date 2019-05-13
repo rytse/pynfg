@@ -9,7 +9,7 @@ Copyright (C) 2013 James Bono (jwbono@gmail.com)
 GNU Affero General Public License
 
 """
-from __future__ import division
+
 import copy
 import numpy as np
 from pynfg import DecisionNode, iterSemiNFG
@@ -90,7 +90,7 @@ def coordinated_MC(G, S, noise, X, M, innoise=1, delta=1, integrand=None, \
     weight = {}
     w = {}
     funcout = {} #keys are s in S, vals are eval of integrand of G(s)
-    for s in xrange(1, S+1): #sampling S policy profiles
+    for s in range(1, S+1): #sampling S policy profiles
         sys.stdout.write('\r')
         sys.stdout.write('MC Sample ' + str(s))
         sys.stdout.flush()
@@ -189,7 +189,7 @@ def coordinated_MH(G, S, density, noise, X, M, innoise=1, delta=1, \
     iq = {} #keys are base names, iq timestep series
     funcout = {} #keys are s in S, vals are eval of integrand of G(s)
     dens = np.zeros(S+1) #storing densities for return
-    for s in xrange(1, S+1): #sampling S sequences of policy profiles
+    for s in range(1, S+1): #sampling S sequences of policy profiles
         sys.stdout.write('\r')
         sys.stdout.write('MH Sample ' + str(s))
         sys.stdout.flush()
@@ -249,7 +249,7 @@ def coordinated_calciq(p, G, X, M, mix, delta, innoise, satisfice=None):
     except AttributeError:
         ufoo = G.utility
         uargs = p
-    for x in xrange(1,X+1):
+    for x in range(1,X+1):
         G.sample()
         util = (ufoo(*uargs)+(x-1)*util)/x
     if satisfice: #using the satisficing distribution for drawing alternatives

@@ -9,7 +9,7 @@ Copyright (C) 2013 James Bono (jwbono@gmail.com)
 GNU Affero General Public License
 
 """
-from __future__ import division
+
 import time
 import copy
 import numpy as np
@@ -56,9 +56,9 @@ def mcrl_ewma(Game, bn, J, N, alpha, delta, eps, uni=False, pureout=False):
     # initializing training schedules from scalar inputs
     if isinstance(J, (int)):
         J = J*np.ones(N)
-    if isinstance(alpha, (int, long, float)):
+    if isinstance(alpha, (int, float)):
         alpha = alpha*np.ones(N)
-    if isinstance(eps, (int, long, float)):
+    if isinstance(eps, (int, float)):
         eps = eps*np.ones(N)
     # getting shorter/more descriptive variable names to work with
     T0 = G.starttime
@@ -79,7 +79,7 @@ def mcrl_ewma(Game, bn, J, N, alpha, delta, eps, uni=False, pureout=False):
     V = np.zeros(shape[:-1]) #Value table
     Rseries = np.zeros(N) #tracking average reward for plotting convergence
     np.seterr(invalid='ignore', divide='ignore')
-    for n in xrange(N):
+    for n in range(N):
         sys.stdout.write('\r')
         sys.stdout.write('Iteration ' + str(n))
         sys.stdout.flush()
@@ -87,9 +87,9 @@ def mcrl_ewma(Game, bn, J, N, alpha, delta, eps, uni=False, pureout=False):
         visitn = set() #dict of messages and mapairs visited in episode n
         Rseries[n] = R #adding the most recent ave reward to the data series
         A *= alpha[n] #rescaling A at start of new episode, see writeup
-        for j in xrange(int(J[n])):
+        for j in range(int(J[n])):
             visitj = set() #visitj must be cleared at the start of every run
-            for t in xrange(T0,T):
+            for t in range(T0,T):
                 #import pdb; pdb.set_trace()
                 #G.bn_part[bn][t-T0].CPT = copy.copy(G.bn_part[bn][0].CPT)
                 G.sample_timesteps(t, t) #sampling the timestep
@@ -167,7 +167,7 @@ def mcrl_ewma(Game, bn, J, N, alpha, delta, eps, uni=False, pureout=False):
         G.bn_part[bn][0].CPT /= CPTsum[...,np.newaxis]
     if pureout: #if True, output is a pure policy
         G.bn_part[bn][0].makeCPTpure()
-    for tau in xrange(1, T-T0): #before exit, make CPTs independent in memory
+    for tau in range(1, T-T0): #before exit, make CPTs independent in memory
         G.bn_part[bn][tau].CPT = copy.copy(G.bn_part[bn][0].CPT)
     plt.plot(Rseries) #plotting Rseries to gauge convergence
     fig = plt.gcf() 

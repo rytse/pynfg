@@ -12,10 +12,10 @@ GNU Affero General Public License
 
 """
 
-from __future__ import division
+
 import numpy as np
 import scipy as sp
-from seminfg import *
+from .seminfg import *
 
 class iterSemiNFG(SemiNFG):
     """Implements the iterated semi-NFG formalism created by D. Wolpert
@@ -83,7 +83,7 @@ class iterSemiNFG(SemiNFG):
         self._set_edges()
         self._topological_sort()
         self._set_partition()
-        self.players = [p for p in self.partition.keys() if p!='nature']
+        self.players = [p for p in list(self.partition.keys()) if p!='nature']
         self._set_time_partition()
         self._set_bn_part()
         self.r_functions = r_functions
@@ -101,7 +101,7 @@ class iterSemiNFG(SemiNFG):
         """
         self.time_partition = {}
         for n in self.iterator:
-            if n.time not in self.time_partition.keys():
+            if n.time not in list(self.time_partition.keys()):
                 self.time_partition[n.time] = [n]
             else:
                 self.time_partition[n.time].append(n)
@@ -118,11 +118,11 @@ class iterSemiNFG(SemiNFG):
         """
         self.bn_part = {}
         for n in self.nodes:
-            if n.basename not in self.bn_part.keys():
+            if n.basename not in list(self.bn_part.keys()):
                 self.bn_part[n.basename] = [n]
             else:
                 self.bn_part[n.basename].append(n)
-        for bn in self.bn_part.keys():
+        for bn in list(self.bn_part.keys()):
             self.bn_part[bn].sort(key=lambda nod: nod.time)
 
     def reward(self, player, t, nodeinput=None):
@@ -195,7 +195,7 @@ class iterSemiNFG(SemiNFG):
             stop = self.endtime
         if basenames:
 #            import pdb; pdb.set_trace()
-            outdict = dict(zip(basenames, [[] for x in range(len(basenames))]))
+            outdict = dict(list(zip(basenames, [[] for x in range(len(basenames))])))
             for t in range(start, stop+1):
                 for n in self.time_partition[t]:
                     if n.basename in basenames:
@@ -218,16 +218,16 @@ class iterSemiNFG(SemiNFG):
         
         """
         if not nodenames:
-            return dict(map(lambda x: (x.name, x.get_value()), self.nodes))
+            return dict([(x.name, x.get_value()) for x in self.nodes])
         else:
             adict = {}
             for name in nodenames:
-                if name in self.node_dict.keys():
+                if name in list(self.node_dict.keys()):
                     adict[name] = self.node_dict[name].get_value()
-                elif name in self.bn_part.keys():
+                elif name in list(self.bn_part.keys()):
                     adict[name] = [x.get_value() for x in self.bn_part[name]]
                 else:
-                    print '%s is neither nodename nor basename' %name
+                    print('%s is neither nodename nor basename' %name)
             return adict
             
     def set_CPTs(self, cptdict):
@@ -238,11 +238,11 @@ class iterSemiNFG(SemiNFG):
            for all of the corresponding nodes.
         :type cptdict: dict
         """
-        for name in cptdict.keys():
-            if name in self.node_dict.keys():
+        for name in list(cptdict.keys()):
+            if name in list(self.node_dict.keys()):
                 self.node_dict[name].CPT = cptdict[name]
-            elif name in self.bn_part.keys():
+            elif name in list(self.bn_part.keys()):
                 for t in range(len(self.bn_part[name])):
                     self.bn_part[name][t].CPT = cptdict[name]
             else:
-                print ('%s is neither a node name nor a basename.' %name)
+                print(('%s is neither a node name nor a basename.' %name))

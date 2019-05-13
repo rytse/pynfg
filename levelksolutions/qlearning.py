@@ -12,7 +12,7 @@ Author: Dongping Xie
 
 """
 
-from __future__ import division
+
 import numpy as np
 import matplotlib.pylab as plt
 from pynfg.utilities.utilities import convert_2_pureCPT
@@ -56,8 +56,8 @@ def opt_qlearning(G,bn,w,d,N,r_max = 0):
     #the number of times each (m,a) pair has been visited.                            
     r_av = 0 #the dynamic (discounted) average reward
     rseries = [] #a series of average rewards
-    for ep in xrange(N):
-        print ep
+    for ep in range(N):
+        print(ep)
         #convert Q table to CPT
         G.bn_part[bn][T0].CPT = convert_2_pureCPT(Q) 
         G.sample_timesteps(T0,T0) #sample the start time step
@@ -69,7 +69,7 @@ def opt_qlearning(G,bn,w,d,N,r_max = 0):
         if ep != 0: #to avoid "divided by 0" error
             r_av_new = r_av + (r-r_av)/((T-1)*ep) #update the dynamic reward
         Qmax = Q[mapair] #get the maximum q value
-        for t in xrange(T0+1,T):
+        for t in range(T0+1,T):
             G.bn_part[bn][t].CPT = convert_2_pureCPT(Q) #convert Q table to CPT
             G.sample_timesteps(t,t) #sample the current time step
             if t!= (T-1): #required by Q-learning

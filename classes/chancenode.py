@@ -12,12 +12,12 @@ GNU Affero General Public License
 
 """
 
-from __future__ import division
+
 import inspect
 import numpy as np
 import scipy as sp
 import scipy.stats.distributions as randvars
-from node import *
+from .node import *
 
 class ChanceNode(Node):
     """Implements a chance node of the semi-NFG formalism created by D. Wolpert
@@ -122,7 +122,7 @@ class ChanceNode(Node):
                  verbose=False):
         if verbose:
             try:
-                print 'Name: '+ name + '\nDescription: '+ description
+                print('Name: '+ name + '\nDescription: '+ description)
             except TypeError:
                 print('name and description should be strings')
         self.name = name
@@ -143,7 +143,7 @@ class ChanceNode(Node):
             self.CPT = None
             self.distribution = distip[0]
             self.params = distip[1]
-            parlist = filter(lambda x: isinstance(x,Node), self.params)
+            parlist = [x for x in self.params if isinstance(x,Node)]
             self.parents = self._set_parent_dict(parlist)
             self.continuous = (randvars.rv_continuous in \
                                 inspect.getmro(type(self.distribution)))
@@ -186,7 +186,7 @@ class ChanceNode(Node):
             arglist = []
             for val in self.params:
                 if isinstance(val,Node):
-                    if val.name in parentinput.keys():
+                    if val.name in list(parentinput.keys()):
                         arglist.append(parentinput[val.name])
                     else:
                         arglist.append(val.get_value())
@@ -236,11 +236,11 @@ class ChanceNode(Node):
             parentinput = {}
         if self.CPT is None:
             if not parentinput:
-                arglist = map(lambda x: x.get_value() \
-                              if isinstance(x,Node) else x, self.params)
+                arglist = [x.get_value() \
+                              if isinstance(x,Node) else x for x in self.params]
             else:
-                arglist = map(lambda x: parentinput[x.name] \
-                              if isinstance(x,Node) else x, self.params)
+                arglist = [parentinput[x.name] \
+                              if isinstance(x,Node) else x for x in self.params]
             args = tuple(arglist)
             if valueinput is None:
                 valueinput = self.get_value()

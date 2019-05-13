@@ -12,7 +12,7 @@ GNU Affero General Public License
 
 """
 
-from __future__ import division
+
 import numpy as np
 import scipy as sp
 import networkx as nx
@@ -83,7 +83,7 @@ class SemiNFG(object):
         self.nodes = nodes
         self._set_node_dict()
         self._set_partition()
-        self.players = [p for p in self.partition.keys() if p!='nature']
+        self.players = [p for p in list(self.partition.keys()) if p!='nature']
         self.u_functions = u_functions
         self._set_edges()
         self._topological_sort()
@@ -106,7 +106,7 @@ class SemiNFG(object):
         """
         self.partition = {}
         for n in self.nodes:
-            if n.player not in self.partition.keys():
+            if n.player not in list(self.partition.keys()):
                 self.partition[n.player] = set([n])
             else:
                 self.partition[n.player].add(n)
@@ -118,9 +118,9 @@ class SemiNFG(object):
         with keys as the names of nodes, and values are the set of child nodes.
         
         """
-        self.edges = dict(map(lambda x: (x.name, set()), self.nodes))
+        self.edges = dict([(x.name, set()) for x in self.nodes])
         for n in self.nodes:
-            for par in n.parents.values():
+            for par in list(n.parents.values()):
                 self.edges[par.name].add(n)
     
     def _topological_sort(self):
@@ -134,12 +134,12 @@ class SemiNFG(object):
         """
         self.iterator = []
         S = self.get_leaves()
-        visit_dict = dict(map(lambda x: (x.name, False), self.nodes))
+        visit_dict = dict([(x.name, False) for x in self.nodes])
         
         def top_visit(n, top_order, visit_dict):
             if not visit_dict[n.name]:
                 visit_dict[n.name] = True
-                for m in n.parents.values():
+                for m in list(n.parents.values()):
                     top_order, visit_dict = top_visit(m, top_order, visit_dict)
                 top_order.append(n)
             return top_order, visit_dict
@@ -211,7 +211,7 @@ class SemiNFG(object):
            the SemiNFG object.
         
         """
-        visit_dict = dict(map(lambda x: (x.name, False), self.nodes))
+        visit_dict = dict([(x.name, False) for x in self.nodes])
         future = set()
         
         def kid_visit(n, future, visit_dict):
@@ -247,7 +247,7 @@ class SemiNFG(object):
            the SemiNFG object.
         
         """
-        visit_dict = dict(map(lambda x: (x.name, False), self.nodes))
+        visit_dict = dict([(x.name, False) for x in self.nodes])
         past = set()
 
         def par_visit(n, past, visit_dict):
@@ -264,12 +264,12 @@ class SemiNFG(object):
             """
             if not visit_dict[n.name]:
                 visit_dict[n.name] = True
-                for m in n.parents.values():
+                for m in list(n.parents.values()):
                     past, visit_dict = par_visit(m, past, visit_dict)
                 past.add(n)
             return past, visit_dict
                 
-        for par in self.node_dict[nodename].parents.values():
+        for par in list(self.node_dict[nodename].parents.values()):
             past, visit_dict = par_visit(par, past, visit_dict)
         return past
 
@@ -309,7 +309,7 @@ class SemiNFG(object):
         
         """
         if not nodenames:
-            return dict(map(lambda x: (x.name, x.get_value()), self.nodes))
+            return dict([(x.name, x.get_value()) for x in self.nodes])
         else:
             adict = {}
             for name in nodenames:
@@ -332,7 +332,7 @@ class SemiNFG(object):
         cptdict = {}
         if mode == 'basename':
             try:
-                for bn in self.bn_part.keys():
+                for bn in list(self.bn_part.keys()):
                     if self.bn_part[bn][0].player != 'nature':
                         cptdict[bn] = self.bn_part[bn][0].CPT
             except AttributeError:
@@ -349,7 +349,7 @@ class SemiNFG(object):
         :arg cptdict: dictionary with node names as keys and CPTs as values
         :type cptdict: dict
         """
-        for name in cptdict.keys():
+        for name in list(cptdict.keys()):
             self.node_dict[name].CPT = cptdict[name]
         
     def set_values(self, value_dict):
@@ -451,8 +451,8 @@ class SemiNFG(object):
                     if n.name not in exclude:
                         n.draw_value()
         if nodenames:
-            outdict = dict(zip(nodenames, [self.node_dict[x].get_value() for \
-                                            x in nodenames]))
+            outdict = dict(list(zip(nodenames, [self.node_dict[x].get_value() for \
+                                            x in nodenames])))
             return outdict
         else:
             outdict = self.get_values()
@@ -474,7 +474,7 @@ class SemiNFG(object):
         """
         G = nx.DiGraph()
         if not subgraph:
-            nodelist = self.node_dict.values()
+            nodelist = list(self.node_dict.values())
         else:
             nodelist = []
             for name in subgraph:

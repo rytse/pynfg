@@ -10,7 +10,7 @@ GNU Affero General Public License
 
 """
 
-from __future__ import division
+
 import copy
 import numpy as np
 from pynfg import DecisionNode, iterSemiNFG
@@ -102,7 +102,7 @@ def policy_MC(G, S, noise, X, M, innoise=1, delta=1, integrand=None, \
     T0 = G.starttime
     for p in G.players: #getting player-keyed dict of basenames
         bndict[p] = [x.basename for x in G.partition[p] if x.time==T0]
-    for s in xrange(1, S+1): #sampling S policy profiles
+    for s in range(1, S+1): #sampling S policy profiles
         sys.stdout.write('\r')
         sys.stdout.write('MC Sample ' + str(s))
         sys.stdout.flush()
@@ -214,7 +214,7 @@ def policy_MH(G, S, density, noise, X, M, innoise=1, delta=1, \
     T0 = G.starttime
     for p in G.players: #getting player-keyed dict of basenames
         bndict[p] = [x.basename for x in G.partition[p] if x.time==T0]
-    for s in xrange(1, S+1): #sampling S sequences of policy profiles
+    for s in range(1, S+1): #sampling S sequences of policy profiles
         sys.stdout.write('\r')
         sys.stdout.write('MH Sample ' + str(s))
         sys.stdout.flush()
@@ -271,7 +271,7 @@ def policy_calciq(p, G, X, M, mix, delta, innoise, satisfice=None):
     tick = 0
     T0 = G.starttime
     bnlist = [x.basename for x in G.partition[p] if x.time==T0]
-    for x in xrange(1,X+1):
+    for x in range(1,X+1):
         G.sample()
         util += G.npv_reward(p,G.starttime,delta)/X
     if satisfice: #using the satisficing distribution for drawing alternatives

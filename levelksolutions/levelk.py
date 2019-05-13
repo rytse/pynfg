@@ -11,7 +11,7 @@ Copyright (C) 2013 James Bono (jwbono@gmail.com)
 GNU Affero General Public License
 
 """
-from __future__ import division
+
 import time
 import copy
 import numpy as np

@@ -9,13 +9,13 @@ Copyright (C) 2013 James Bono (jwbono@gmail.com)
 GNU Affero General Public License
 
 """
-from __future__ import division
+
 
 import numpy as np
 import scipy as sp
 import copy
 import scipy.stats.distributions as randvars
-from node import *
+from .node import *
 from pynfg.utilities.utilities import convert_2_pureCPT
 
 class DecisionNode(Node):
@@ -94,8 +94,8 @@ class DecisionNode(Node):
                  verbose=False):
         if verbose:
             try:
-                print 'Name: '+ name + '\nDescription: '+ description + \
-                    '\nPlayer: '+ player 
+                print('Name: '+ name + '\nDescription: '+ description + \
+                    '\nPlayer: '+ player) 
             except (AttributeError, TypeError):
                 raise AssertionError('name, description, \
                                      player should be strings')

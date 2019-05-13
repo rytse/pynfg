@@ -13,7 +13,7 @@ GNU Affero General Public License
 """
 
 import numpy as np
-from node import *
+from .node import *
 
 class DeterNode(Node):
     """Implements a deterministic node for the semi-NFG formalism created 
@@ -95,7 +95,7 @@ class DeterNode(Node):
                  verbose=False):
         if verbose:
             try:
-                print 'Name: '+ name + '\nDescription: '+ description
+                print('Name: '+ name + '\nDescription: '+ description)
             except TypeError:
                 print('name and description should be strings')
         self.name = name
@@ -108,7 +108,7 @@ class DeterNode(Node):
             self.space = space
         else:
             raise TypeError('The space must be a list')
-        self.parents = self._set_parent_dict(params.values())
+        self.parents = self._set_parent_dict(list(params.values()))
         self.continuous = continuous
 #        self.value = None
 #        self.draw_value()        

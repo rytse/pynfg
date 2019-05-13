@@ -11,7 +11,7 @@ Copyright (C) 2013 James Bono (jwbono@gmail.com)
 GNU Affero General Public License
 
 """
-from __future__ import division
+
 import numpy as np
 import copy
 
@@ -48,16 +48,16 @@ def mceu(Game, dn, N, tol=30, delta=1, verbose=False):
         idx = G.node_dict[dn].get_CPTindex()
         visits[idx[:-1]] += 1
         Utable[idx] += ufoo(*uargs)
-        for a in xrange(CPT_shape[-1]):
+        for a in range(CPT_shape[-1]):
             if a != idx[-1]:
                 G.node_dict[dn].set_value(space[a])
                 G.sample(start=childnames)
                 idy = idx[:-1]+(a,)
                 Utable[idy] += ufoo(*uargs)
     if verbose:
-        print('number of unvisited messages:', \
-              (visits.size-np.count_nonzero(visits))/CPT_shape[-1])
-        print('least number of visits:', np.min(visits[np.nonzero(visits)])) 
+        print(('number of unvisited messages:', \
+              (visits.size-np.count_nonzero(visits))/CPT_shape[-1]))
+        print(('least number of visits:', np.min(visits[np.nonzero(visits)]))) 
     idx = (visits==0)
     visits[idx] = 1
     return Utable/visits

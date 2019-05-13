@@ -9,7 +9,7 @@ Copyright (C) 2013 James Bono (jwbono@gmail.com)
 GNU Affero General Public License
 
 """
-from __future__ import division
+
 import copy
 import numpy as np
 from pynfg import DecisionNode
@@ -103,13 +103,13 @@ def iterated_MC(G, S, noise, X, M, innoise=1, delta=1, integrand=None, \
     weight = {} #keys are s in S, vals are bn-keyed dicts of importance weights
     for bn in bnlist: #preallocating iq dict entries
         iq[bn] = np.zeros(T-T0+1) 
-    for s in xrange(1, S+1): #sampling S sequences of policy profiles
+    for s in range(1, S+1): #sampling S sequences of policy profiles
         sys.stdout.write('\r')
         sys.stdout.write('MC Sample ' + str(s))
         sys.stdout.flush()
         GG = copy.deepcopy(G)
-        w = dict(zip(bnlist, np.ones(len(bnlist)))) #mapping bn to IS weights
-        for t in xrange(T0, T+1): #sampling a sequence of policy profiles
+        w = dict(list(zip(bnlist, np.ones(len(bnlist))))) #mapping bn to IS weights
+        for t in range(T0, T+1): #sampling a sequence of policy profiles
             # gather list of decision nodes in time tout
             for bn in bnlist: #drawing current policy
                 w[bn] *= GG.bn_part[bn][t-T0].perturbCPT(noise, mixed=mix, \
@@ -220,12 +220,12 @@ def iterated_MH(G, S, density, noise, X, M, innoise=1, delta=1, \
     funcout = {} #keys are s in S, vals are eval of integrand of G(s)
     dens = np.zeros(S+1)
     # gather list of decision nodes in base game
-    for s in xrange(1, S+1): #sampling S sequences of policy profiles
+    for s in range(1, S+1): #sampling S sequences of policy profiles
         sys.stdout.write('\r')
         sys.stdout.write('MH Sample ' + str(s))
         sys.stdout.flush()
         GG = copy.deepcopy(G)
-        for t in xrange(T0, T+1):
+        for t in range(T0, T+1):
             for dn in dnlist:
                 GG.bn_part[dn][t-T0].CPT = G.bn_part[dn][t-T0].perturbCPT(\
                                             noise, mixed=mix)
@@ -279,7 +279,7 @@ def iterated_calciq(bn, G, X, M, mix, delta, start, innoise, satisfice=None):
     weight = np.ones(M)
     tick = 0
     bnlist = [x.name for x in G.bn_part[bn]]
-    for x in xrange(1,X+1):
+    for x in range(1,X+1):
         G.sample()
         util += G.npv_reward(p,start,delta)/X
     if satisfice: #using the satisficing distribution for drawing alternatives

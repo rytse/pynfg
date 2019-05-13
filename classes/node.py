@@ -67,7 +67,7 @@ class Node(object):
         :type parent: dict
         
         """
-        for par in self.parents.values():
+        for par in list(self.parents.values()):
             if par.continuous is True:
                 raise RuntimeError("The parent named %s is continuous!" %par.name)
                 
@@ -91,7 +91,7 @@ class Node(object):
         if parentinput is None:
             parentinput = {}
         valuelist = []
-        for par in self.parents.values():
+        for par in list(self.parents.values()):
             if par.name in parentinput:
                 valuelist.append(parentinput[par.name]) 
             else:            
@@ -125,16 +125,16 @@ class Node(object):
         if parentinput is None:
             parentinput = {}
         if isinstance(parentinput, list):
-            if len(parentinput)<len(self.parents.keys()):
+            if len(parentinput)<len(list(self.parents.keys())):
                 raise ValueError('parentinput as list must have at least as', \
                                  'many entries as the parent dict')
             else:
                 i = 0
-                for par in self.parents.values():
+                for par in list(self.parents.values()):
                     ind.append(par.get_valueindex(parentinput[i]))
                     i += 1
         else: 
-            for par in self.parents.values():
+            for par in list(self.parents.values()):
                 if par.name in parentinput:
                     ind.append(par.get_valueindex(parentinput[par.name])) 
                 else:            
